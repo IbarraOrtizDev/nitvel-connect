@@ -1,0 +1,180 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width')
+    title Recuperar contraseña
+    style.
+      body{
+      width:100%;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      }
+      .content{
+      max-width:400px;
+      width: 500px;
+      padding:20px;
+      border-radius:5px;
+      box-shadow:0px 0px 10px grey;
+      }
+      img{
+      width:100px;
+      }
+      header{
+      display:flex;
+      flex-direction:column;
+      align-items:center
+      }
+      input[type="password"]{
+      width:100%;
+      height:26px;
+      font-size:18px;
+      border:none;
+      border-bottom:1px solid grey;
+      margin-bottom:15px
+      }
+      .comandos{
+      display:flex;
+      justify-content:flex-end
+      }
+      .comandos>*{
+      margin:3px;
+      height:30px;
+      border:none;
+      box-shadow:0px 0px 5px grey;
+      cursor:pointer;
+      font-size:18px
+      }
+      .comandos>*:hover{
+      box-shadow:0px 0px 1px grey;
+      }
+      .comandos>*:nth-child(1){
+      background-color:#068ffb;
+      color:white
+      }
+      .inconcidencia{
+      text-align: center;
+      font-size:20px;
+      color: red;
+      display: none;
+      margin-bottom: 10px
+      }
+      .seguridad {
+      -webkit-transition: width 2s;
+      transition: width 1s;
+      color: white;
+      display: none;
+      margin-bottom: 10px;
+      height: 25px;
+      text-align: center;
+      font-size: 20px;
+      }
+      .parrafo {
+      font-size: 18px;
+      text-align: center;
+      padding: 5px;
+      background-color: #068ffb;
+      color: white;
+      }
+    script.
+      var aceptado = false,
+      nueva=null,
+      formulario=null,
+      comprueba=null,
+      estado=null,
+      seguridad =null,
+      inconcidencia =null
+      window.onload=function(){
+      nueva = document.getElementById('nueva')
+      comprueba = document.getElementById('comprueba')
+      formulario = document.getElementById('formulario')
+      seguridad = document.getElementById('seguridad')
+      inconcidencia = document.getElementById('inconcidencia')
+      comprueba.addEventListener('keyup',function(){
+      aceptado = verifica()
+      })
+      document.getElementById('invi').value = sessionStorage.getItem('correo')
+      comprueba.addEventListener('focus', function(){
+      seguridad.style.display='none'
+      })
+      nueva.addEventListener('focus',function(){
+      document.querySelector('.parrafo').style.display='none'
+      })
+      nueva.addEventListener('keyup', function(){
+      seguridad.style.display='block'
+      //console.log(nueva.value.length)
+      let total = 0,
+      numero = new RegExp('[0-9]'),
+      mayuscula = new RegExp('[A-Z]')
+      if(nueva.value.length<8){
+      total += 0
+      }else{
+      total +=33
+      }
+      if(numero.test(nueva.value)){
+      total+=34
+      }
+      if(mayuscula.test(nueva.value)){
+      total+=33
+      }
+      seguridad.style.width =total+'%'
+      if(total <35){
+      seguridad.innerHTML='Baja'
+      seguridad.style.backgroundColor='red'
+      }else if(total>35 && total<68){
+      seguridad.innerHTML='Media'
+      seguridad.style.backgroundColor='orange'
+      }else if(total>70){
+      seguridad.innerHTML='Alta'
+      seguridad.style.backgroundColor='green'
+      }
+      })
+      }
+      function verifica(){
+      if(nueva.value === comprueba.value){
+      inconcidencia.style.display='none'
+      return true
+      }else{
+      inconcidencia.style.display='block'
+      return false
+      }
+      }
+      function cambiar(){
+      location.href="/"
+      }
+      function enviar(){
+      let ver = new RegExp("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"),
+      ver2 = new RegExp('[0-9]'),
+      n = nueva.value
+      if(ver.test(n)&&ver2.test(n)&&verifica()){
+      console.log('treu')
+      return true
+      }else{
+      return false
+      }
+      }
+  body
+    .content
+      header
+        img(src='http://localhost:3000/logos/logonitvel.png', alt='')
+        h2(style='text-align:center') Rescata tú cuenta
+      hr
+      main
+        h3 Crea la nueva contraseña
+        form#formulario(action='/newContrasena', onsubmit='return enviar()', method='post')
+          #seguridad.seguridad
+          p.parrafo
+            | La contraseña debe tener como minimo 8 caracteres,una mayuscula y un número
+          label(for='newContrasena')
+            input#nueva(type='password', placeholder='Nueva contraseña', pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}', name='newContrasena', required='')
+          #inconcidencia.inconcidencia
+            | Ambas contraseñas no coinciden
+          label(for='contra')
+            input#comprueba(type='password', placeholder='Verifica contraseña', pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}', name='contra', required='')
+          label(for='correo')
+            input#invi(style='visibility:hidden' name='correo')
+          .comandos
+            input(type='submit', value='Verificar')
+            input(type='button', onclick='cambiar()', value='Cancelar')

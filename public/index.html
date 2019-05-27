@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>NITVEL</title>
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0">
+	<!--<link rel="stylesheet" type="text/css" href="">-->
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB" crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="js/agg.js"></script>
+<!--	<link rel="icon" href="./logos/favicon.ico" type="image/x-icon">-->
+	 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<script>
+        var indexed = [
+            {
+                
+                nombre:'calendario',
+                Index:[
+                    {nombre:'proyecto',estado:false},
+                    {nombre:'_id',estado:false}
+                ]
+            },
+            {
+                nombre:'tareas',
+                keyPath:'_id',
+                Index:[
+                    {nombre:'fechaInit', estado:false},
+                    {nombre:'proyecto', estado:false},
+                    {nombre:'estado', estado:false}
+                ]
+            },
+            {
+                nombre:'usuario',
+                keyPath:'_id',
+                Index:[
+                    {nombre:'correo',estado:true}
+                ]
+            },
+            {
+                nombre:'notas',
+                keyPath:'_id',
+                Index:[
+                    {nombre:'_id',estado:true}
+                ]
+            },
+			{
+                nombre:'proyectos',
+                keyPath:'nombre',
+                Index:[
+                    {nombre:'_id',estado:true}
+                ]
+            }
+        ],
+            InitIndexed = new Iniciar('gestionApp', 1);
+            InitIndexed.inicia(indexed)
+        var socket =io();
+        //var aqq = new XMLHttpRequest()
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        var context,
+            res = {recibe:null, envia:null, recibeSin:null};
+        function pedir(link, tipo){
+            var aqq = new XMLHttpRequest()
+            aqq.open('GET', link, true)
+            aqq.responseType ='arraybuffer'
+            aqq.onload = function(){
+                if(aqq.status == 200){
+                    context.decodeAudioData(aqq.response, (array)=>{
+                        if(tipo == 'recibe'){
+                            res.recibe = array
+                        }else if(tipo == 'envia'){
+                            res.envia = array
+                        }else{
+                            res.recibeSin = array
+                        }
+                    })
+                }else{
+                    console.log('no hay musica')
+                }
+            }
+            aqq.send()
+        }
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        .then((stream)=>{
+            context =  new AudioContext()
+            pedir('/apli/enviar.mp3', 'envia')
+            pedir('/apli/recibe2.mp3', 'recibe')
+            pedir('/apli/recibe.mp3', 'recibesin')
+        }).catch(()=>{
+            context =  new AudioContext()
+            pedir('/apli/enviar.mp3', 'envia')
+            pedir('/apli/recibe2.mp3', 'recibe')
+            pedir('/apli/recibe.mp3', 'recibesin')
+        })
+        function play(tipo){
+            var source = context.createBufferSource()
+            if(tipo =='recibe'){
+                source.buffer = res.recibe;
+            }else if(tipo =='envia'){
+                source.buffer = res.envia;
+            }else{
+                source.buffer = res.recibeSin;
+            }
+            source.connect(context.destination); 
+            source.start(0)
+        }
+    </script>
+    <style>
+        #allCarga>div{
+          width:35px;
+          height:35px;
+          border:7px solid #ae77f8;
+          border-radius:100%;
+          border-top-color:#0080ff;
+          animation:transf 1s linear infinite;
+          position:fixed;
+          top:0px;
+          left:0px;
+          right:0px;
+          bottom:0px;
+          margin:auto;
+          box-sizing:border-box;
+        }
+        #all{
+          overflow:hidden;
+          width:30px;
+          height:30px;
+        }
+        @keyframes transf{
+          from{
+            transform:rotate(0deg)
+          }
+          to{
+            transform:rotate(360deg)
+          }
+        }
+.carga>div{
+  width:30px;
+  height:30px;
+  border:6px solid; 
+  border-radius:100%;
+  position:absolute;
+  top:0px;
+  border-left:6px solid #1F8ADC;
+  animation:force 1s infinite linear;
+}
+.carga{
+  width:42px;
+  height:42px;
+  position:relative;
+  margin:auto
+}
+@keyframes force{
+  from {
+    transform:rotate(360deg)
+  }
+}
+    </style>
+</head>
+<body>
+    <article id="app"></article>
+	<script type="text/javascript" src="./js/build.js"></script>
+</body>

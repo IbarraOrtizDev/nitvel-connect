@@ -1,0 +1,81 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width')
+    title Recuperar contraseña
+    style.
+      body{
+      width:100%;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      }
+      .content{
+      max-width:400px;
+      padding:20px;
+      border-radius:5px;
+      box-shadow:0px 0px 10px grey;
+      }
+      img{
+      width:100px;
+      }
+      header{
+      display:flex;
+      flex-direction:column;
+      align-items:center
+      }
+      input[type="number"]{
+      width:100%;
+      height:26px;
+      font-size:25px;
+      border:none;
+      border-bottom:1px solid grey;
+      margin-bottom:15px
+      }
+      .comandos{
+      display:flex;
+      justify-content:flex-end
+      }
+      .comandos>*{
+      margin:3px;
+      height:30px;
+      border:none;
+      box-shadow:0px 0px 5px grey;
+      cursor:pointer;
+      font-size:18px
+      }
+      .comandos>*:hover{
+      box-shadow:0px 0px 1px grey;
+      }
+      .comandos>*:nth-child(1){
+      background-color:#068ffb;
+      color:white
+      }
+      .incorrecto{
+      color:red;
+      font-size:18px
+      }
+    script.
+      function cambiar(){
+      location.href="/"
+      }
+  body
+    .content
+      header
+        img(src='http://localhost:3000/logos/logonitvel.png', alt='')
+        h2 Rescata tú cuenta
+      hr
+      main
+        p 
+            -if(content)
+              .incorrecto  Codigo incorrecto
+        p
+          | Enviamos un código de recuperación a tu cuenta de correo, por favor introduce dicho código
+        form(action='/verificaCodigo', method='post')
+          label(for='codigo')
+            input(type='number', placeholder='****', name='codigo', required='')
+          .comandos
+            input(type='submit', value='Verificar')
+            input(type='button', onclick='cambiar()', value='Cancelar')

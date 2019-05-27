@@ -1,0 +1,73 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width')
+    title No existe la cuenta
+    style.
+      img{
+      width:100px;
+      display:inline-block;
+      }
+      .imagen{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      margin:10px
+      }
+      .parrafo{
+      text-align:center;
+      margin:10px auto;
+      }
+      .comandos{
+      display:flex;
+      justify-content:center
+      }
+      .reintentar{
+      background-color:#ae77f8;
+      box-shadow:0px 0px 10px grey
+      }
+      .new{
+      background-color:#068ffb;
+      box-shadow:0px 0px 10px grey
+      }
+      .comandos a{
+      text-decoration:none;
+      color:white;
+      font-size:18px;
+      text-align:center
+      }
+      .comandos div{
+      margin:5px;
+      padding:2px;
+      border-radius:3px;
+      width:100px;
+      text-align:center
+      }
+      .comandos div:hover{
+      box-shadow:0px 0px 0px grey
+      }
+      main{
+      max-width:320px;
+      border-radius:5px;
+      box-shadow:0px 0px 10px;
+      padding:5px;
+      }
+      body{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      width:100%;
+      height:90vh
+      }
+  body
+    main
+      .imagen
+        img(src='http://localhost:3000/logos/logonitvel.png', alt='')
+      .parrafo
+        | Lo sentimos, no hay ninguna cuenta asociada al correo proporcionado para la posterior verificación, por favor revisar el correo, o crea una cuenta nueva
+      .comandos
+        .reintentar
+          a(href='/contrasena') Reintentar
+        .new
+          a(href='/') Crear cuenta
